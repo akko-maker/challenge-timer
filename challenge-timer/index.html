@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+
+  <title>Countdown Timer</title>
+</head>
+
+<body>
+  <main id="main">
+    <div class="main_inner">
+      <h1>Countdown Timer</h1>
+
+      <div id="timer">00:00:00</div>
+      <div class="input_timer">
+        <input type="text" id="hour" min="0" step="1" value="" placeholder="h">
+        <input type="text" id="min" min="0" max="59" step="1" value="" placeholder="m">
+        <input type="text" id="sec" min="0" max="59" step="1" value="" placeholder="s">
+      </div>
+
+      <div id="control">
+        <button onclick="startCountdown()" class="start_bt">start</button>
+        <button onclick="stopCountdown()" class="stop_bt">stop</button>
+        <button onclick="resetCountdown()" class="reset_bt">reset</button>
+      </div>
+    </div>
+
+  </main>
+</body>
+
+<script>
+  'use strict'
+
+  let timerInterval; //タイマーのインターバルIDを格納する変数
+  let totalSeconds;  //合計の秒数を格納する変数
+
+  function updateTimer() {
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    let formattedTime =
+      (hours < 10 ? "0" + hours : hours) + ":" +
+      (minutes < 10 ? "0" + minutes : minutes) + ":" +
+      (seconds < 10 ? "0" + seconds : seconds);
+
+    document.getElementById("timer").innerHTML = formattedTime;
+
+    if (totalSeconds <= 0) {
+      clearInterval(timerInterval);
+      document.body.classList.add("flash-background"); // 背景を点滅させるクラスを追加
+
+      setTimeout(() => {
+        document.body.classList.remove("flash-background");//背景を点滅させるクラスを削除
+        alert("カウントダウン終了！");
+      }, 2000);
+    } else {
+      totalSeconds--;
+    }
+  }
+  function startCountdown() {
+    let hoursInput = document.getElementById("hour");
+    let minutesInput = document.getElementById("min");
+    let secondsInput = document.getElementById("sec");
+
+    let hours = (hoursInput.value);
+    let minutes = (minutesInput.value);
+    let seconds = (secondsInput.value);
+
+    totalSeconds = hours * 3600 + minutes * 60 + seconds;
+
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+  //タイマーストップ
+  function stopCountdown() {
+    clearInterval(timerInterval);
+  }
+  //タイマーリセット
+  function resetCountdown() {
+    clearInterval(timerInterval);
+    document.getElementById("timer").innerHTML = "00:00:00";
+  }
+
+</script>
+
+</html>
